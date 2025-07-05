@@ -55,7 +55,7 @@ public class Main {
 						byte[] size = Arrays.copyOfRange(decompressedFile,5,nullIndex);
 						byte[] content = Arrays.copyOfRange(decompressedFile,nullIndex+1,decompressedFile.length-1);
 						String fileContent = new String(content);
-						System.out.println(fileContent);
+						System.out.print(fileContent);
 					}
 				}
 				default -> {
