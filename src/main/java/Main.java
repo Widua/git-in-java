@@ -15,6 +15,9 @@ public class Main {
             case "cat-file" -> {
                 command = new CatFileCommand();
             }
+            case "hash-object" -> {
+                command = new HashObjectCommand();
+            }
             default -> {
                 System.out.println("Unknown command: " + args[0]);
             }
