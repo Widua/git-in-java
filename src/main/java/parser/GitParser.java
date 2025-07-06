@@ -2,20 +2,33 @@ package parser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GitParser {
+
+    private Map<String,String> options = new HashMap<>();
+    private List<String> freeArgs = new ArrayList<>();
+
     public Map<String, String> parseOptions(String[] args) {
-        Map<String, String> options = new HashMap<>();
         for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--") || args[i].contains("-")) {
                 String key = args[i].replaceAll("^-*", "");
-                String value = args[i + 1];
+                String value = "";
+                if (i+1 < args.length){
+                    value = args[i+1];
+                }
                 options.put(key, value);
                 i++;
+                continue;
             }
+            if (args[i].contains("http://") || args[i].contains("https://")){
+                String key = "url";
+                options.put(key,args[i]);
+                continue;
+            }
+            freeArgs.add(args[i]);
         }
+        options.put("FreeArgs", String.join(" ", freeArgs));
         return options;
     }
 
