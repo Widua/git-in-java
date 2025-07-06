@@ -19,6 +19,9 @@ public class Main {
             case "hash-object" -> {
                 command = new HashObjectCommand(parser);
             }
+            case "ls-tree" -> {
+                command = new LsTreeCommand();
+            }
             default -> {
                 System.out.println("Unknown command: " + args[0]);
             }
