@@ -1,4 +1,5 @@
-import Command.*;
+import command.*;
+import parser.GitParser;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class Main {
                 command = new CatFileCommand();
             }
             case "hash-object" -> {
-                command = new HashObjectCommand();
+                command = new HashObjectCommand(parser);
             }
             default -> {
                 System.out.println("Unknown command: " + args[0]);
