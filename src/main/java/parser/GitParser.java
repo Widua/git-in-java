@@ -1,5 +1,8 @@
 package parser;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -8,6 +11,7 @@ public class GitParser {
 
     private Map<String,String> options = new HashMap<>();
     private List<String> freeArgs = new ArrayList<>();
+    private List<String> gitignored = new ArrayList<>();
 
     public Map<String, String> parseOptions(String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -30,6 +34,22 @@ public class GitParser {
         }
         options.put("FreeArgs", String.join(" ", freeArgs));
         return options;
+    }
+
+    private void resolveGitignore(){
+        Path gitignore = Path.of(".gitignore");
+        if (gitignore.toFile().exists()){
+            try {
+                gitignored.addAll(Files.readAllLines(gitignore));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public List<String> getGitignored() {
+        resolveGitignore();
+        return gitignored;
     }
 
     public String objectHash(byte[] content) {

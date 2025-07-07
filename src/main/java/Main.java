@@ -22,6 +22,9 @@ public class Main {
             case "ls-tree" -> {
                 command = new LsTreeCommand();
             }
+            case "write-tree"->{
+                command = new WriteTreeCommand(parser);
+            }
             default -> {
                 System.out.println("Unknown command: " + args[0]);
             }
