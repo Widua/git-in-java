@@ -61,6 +61,7 @@ public class WriteTreeCommand implements Command {
         byte[] treeHeader = new String("tree "+tree.size()+"\0").getBytes();
         fullTree.write(treeHeader);
         fullTree.write(tree.toByteArray());
+
         String treeSha1 = parser.objectHash(fullTree.toByteArray());
         byte[] compressedTree = zlib.zlibCompress(fullTree.toByteArray());
         writeObject(treeSha1, compressedTree);
