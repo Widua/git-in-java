@@ -58,7 +58,7 @@ public class WriteTreeCommand implements Command {
             tree.write(HexFormat.of().parseHex(sha1));
         }
         ByteArrayOutputStream fullTree = new ByteArrayOutputStream();
-        byte[] treeHeader = new String("tree "+tree.size()+"\0").getBytes();
+        byte[] treeHeader = new String("tree "+tree.toByteArray().length+"\0").getBytes();
         fullTree.write(treeHeader);
         fullTree.write(tree.toByteArray());
 
