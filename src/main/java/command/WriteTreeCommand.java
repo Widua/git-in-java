@@ -42,7 +42,7 @@ public class WriteTreeCommand implements Command {
             String fileName = file.getName();
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
             if (file.isFile()){
-                entryMode = "10644";
+                entryMode = "100644";
                 byte[] fileContent = Files.readAllBytes(file.toPath());
                 byte[] header = new String( "blob "+fileContent.length+"\0" ).getBytes();
                 blob.write(header);
@@ -61,9 +61,9 @@ public class WriteTreeCommand implements Command {
         byte[] treeHeader = new String("tree "+tree.toByteArray().length+"\0").getBytes();
         fullTree.write(treeHeader);
         fullTree.write(tree.toByteArray());
-
-        String treeSha1 = parser.objectHash(fullTree.toByteArray());
-        byte[] compressedTree = zlib.zlibCompress(fullTree.toByteArray());
+        byte[] fullTreeArr = fullTree.toByteArray();
+        String treeSha1 = parser.objectHash(fullTreeArr);
+        byte[] compressedTree = zlib.zlibCompress(fullTreeArr);
         writeObject(treeSha1, compressedTree);
 
         return treeSha1;
