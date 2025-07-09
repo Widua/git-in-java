@@ -42,9 +42,13 @@ public class WriteTreeCommand implements Command {
             String fileName = file.getName();
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
             if (file.isFile()){
-                entryMode = "100644";
+                if (file.canExecute()){
+                    entryMode = "100755";
+                } else {
+                    entryMode= "100644";
+                }
                 byte[] fileContent = Files.readAllBytes(file.toPath());
-                byte[] header = new String( "blob "+fileContent.length+"\0" ).getBytes();
+                byte[] header = new String( "blob "+fileContent.length+"\0").getBytes();
                 blob.write(header);
                 blob.write(fileContent);
                 sha1 = parser.objectHash(blob.toByteArray());
@@ -55,7 +59,7 @@ public class WriteTreeCommand implements Command {
                 sha1 = createTree(file);
             }
             tree.write( new String(entryMode+" "+fileName+"\0").getBytes() );
-            tree.write(HexFormat.of().parseHex(sha1));
+            tree.write(parser.sha1HexToBytes(sha1));
         }
         ByteArrayOutputStream fullTree = new ByteArrayOutputStream();
         byte[] treeHeader = new String("tree "+tree.toByteArray().length+"\0").getBytes();
