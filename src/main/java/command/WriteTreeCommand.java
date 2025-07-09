@@ -17,7 +17,8 @@ public class WriteTreeCommand implements Command {
     @Override
     public void execute(Map<String, String> options) {
         try {
-            createTree(new File("."));
+            String treeSha = createTree(new File("."));
+            System.out.println(treeSha);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +40,6 @@ public class WriteTreeCommand implements Command {
             String entryMode;
             String sha1;
             String fileName = file.getName();
-            System.out.println(file);
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
             if (file.isFile()){
                 entryMode = "10644";
