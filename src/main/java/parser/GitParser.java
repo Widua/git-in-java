@@ -57,7 +57,6 @@ public class GitParser {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(content);
             byte[] result = md.digest();
-
             StringBuilder builder = new StringBuilder();
             for (byte b : result) {
                 builder.append(String.format("%02x", b));

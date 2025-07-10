@@ -77,7 +77,7 @@ public class WriteTreeCommand implements Command {
         String directory = sha1.substring(0,2);
         String fileName = sha1.substring(2);
         new File(".git/objects",directory).mkdir();
-        Files.write(Path.of(".git/objects/",directory,fileName),encodedFile);
+        Files.write(Path.of(".git/objects",directory,fileName),encodedFile);
     }
 
 }
