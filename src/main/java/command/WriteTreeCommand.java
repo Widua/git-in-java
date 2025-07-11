@@ -41,7 +41,10 @@ public class WriteTreeCommand implements Command {
             String sha1;
             String fileName = file.getName();
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
-            if (file.isFile()){
+            if (file.isDirectory()){
+                entryMode = "40000";
+                sha1 = createTree(file);
+            } else{
                 if (file.canExecute()){
                     entryMode = "100755";
                 } else {
@@ -54,18 +57,19 @@ public class WriteTreeCommand implements Command {
                 sha1 = parser.objectHash(blob.toByteArray());
                 byte[] encoded = zlib.zlibCompress(blob.toByteArray());
                 writeObject(sha1,encoded);
-            } else {
-                entryMode = "40000";
-                sha1 = createTree(file);
             }
             tree.write( new String(entryMode+" "+fileName+"\0").getBytes() );
             tree.write(parser.sha1HexToBytes(sha1));
         }
         ByteArrayOutputStream fullTree = new ByteArrayOutputStream();
-        byte[] treeHeader = new String("tree "+tree.toByteArray().length+"\0").getBytes();
+        byte[] treeBytes = tree.toByteArray();
+        byte[] treeHeader = new String("tree "+treeBytes.length+"\0").getBytes();
         fullTree.write(treeHeader);
         fullTree.write(tree.toByteArray());
         byte[] fullTreeArr = fullTree.toByteArray();
+        System.out.println();
+        System.out.println(Arrays.toString(fullTreeArr));
+        System.out.println();
         String treeSha1 = parser.objectHash(fullTreeArr);
         byte[] compressedTree = zlib.zlibCompress(fullTreeArr);
         writeObject(treeSha1, compressedTree);
