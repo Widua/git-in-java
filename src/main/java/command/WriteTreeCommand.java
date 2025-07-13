@@ -5,10 +5,12 @@ import parser.GitParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.zip.DeflaterOutputStream;
 
 public class WriteTreeCommand implements Command {
     private final GitParser parser;
@@ -68,17 +70,19 @@ public class WriteTreeCommand implements Command {
         fullTree.write(tree.toByteArray());
         byte[] fullTreeArr = fullTree.toByteArray();
         String treeSha1 = parser.objectHash(fullTreeArr);
-        byte[] compressedTree = zlib.zlibCompress(fullTreeArr);
-        writeObject(treeSha1, compressedTree);
-
+        writeObject(treeSha1, fullTreeArr);
         return treeSha1;
     }
 
-    private void writeObject(String sha1, byte[] encodedFile) throws IOException {
+    private void writeObject(String sha1, byte[] fileContent) throws IOException {
         String directory = sha1.substring(0,2);
         String fileName = sha1.substring(2);
         new File(".git/objects",directory).mkdir();
-        Files.write(Path.of(".git/objects",directory,fileName),encodedFile);
+        try(
+                FileOutputStream os = new FileOutputStream(new File(Path.of(".git/objects",directory,fileName).toUri()));
+                DeflaterOutputStream deflater = new DeflaterOutputStream(os)
+                ) {
+            deflater.write(fileContent);
+        }
     }
-
 }

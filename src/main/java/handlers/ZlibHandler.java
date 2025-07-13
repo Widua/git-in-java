@@ -46,8 +46,7 @@ public class ZlibHandler {
         deflater.setInput(content);
         deflater.finish();
         deflater.deflate(output);
-        long writtenSize = deflater.getBytesWritten();
         deflater.end();
-        return Arrays.copyOfRange(output,0, (int) writtenSize);
+        return output;
     }
 }
