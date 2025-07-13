@@ -1,6 +1,8 @@
 package handlers;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -40,13 +42,12 @@ public class ZlibHandler {
 
     public byte[] zlibCompress(byte[] content) {
         Deflater deflater = new Deflater();
-        byte[] output = new byte[100];
-
+        byte[] output = new byte[content.length];
         deflater.setInput(content);
         deflater.finish();
         deflater.deflate(output);
+        long writtenSize = deflater.getBytesWritten();
         deflater.end();
-
-        return output;
+        return Arrays.copyOfRange(output,0, (int) writtenSize);
     }
 }
