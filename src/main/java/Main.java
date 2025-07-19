@@ -22,14 +22,17 @@ public class Main {
             case "ls-tree" -> {
                 command = new LsTreeCommand();
             }
-            case "write-tree"->{
+            case "write-tree" -> {
                 command = new WriteTreeCommand(parser);
+            }
+            case "commit-tree" -> {
+                command = new CommitTreeCommand(parser);
             }
             default -> {
                 System.out.println("Unknown command: " + args[0]);
             }
         }
-        if(command!= null){
+        if (command != null) {
             command.execute(options);
         }
     }

@@ -1,10 +1,9 @@
 package handlers;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 
 public class ZlibHandler {
@@ -18,6 +17,18 @@ public class ZlibHandler {
             instance = new ZlibHandler();
         }
         return instance;
+    }
+
+    public void writeObject(String sha1, byte[] content) throws IOException {
+        String directory = sha1.substring(0, 2);
+        String fileName = sha1.substring(2);
+        new File(".git/objects", directory).mkdir();
+        try (
+                FileOutputStream os = new FileOutputStream(new File(Path.of(".git/objects", directory, fileName).toUri()));
+                DeflaterOutputStream deflater = new DeflaterOutputStream(os)
+        ) {
+            deflater.write(content);
+        }
     }
 
     public byte[] decompressZlib(byte[] input) {
@@ -40,13 +51,4 @@ public class ZlibHandler {
         return outputStream.toByteArray();
     }
 
-    public byte[] zlibCompress(byte[] content) {
-        Deflater deflater = new Deflater();
-        byte[] output = new byte[content.length];
-        deflater.setInput(content);
-        deflater.finish();
-        deflater.deflate(output);
-        deflater.end();
-        return output;
-    }
 }

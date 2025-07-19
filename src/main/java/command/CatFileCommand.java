@@ -35,7 +35,6 @@ public class CatFileCommand implements Command {
                         break;
                     }
                 }
-                byte[] size = Arrays.copyOfRange(decompressedFile, 5, nullIndex);
                 byte[] content = Arrays.copyOfRange(decompressedFile, nullIndex + 1, decompressedFile.length);
                 String fileContent = new String(content);
                 System.out.print(fileContent);

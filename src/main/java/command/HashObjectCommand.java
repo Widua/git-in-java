@@ -4,7 +4,6 @@ import handlers.ZlibHandler;
 import parser.GitParser;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,19 +27,9 @@ public class HashObjectCommand implements Command {
                 byte[] header = new String("blob " + filecontent.length + "\0").getBytes();
                 baos.write(header);
                 baos.write(filecontent);
-
                 String sha1Blob = parser.objectHash(baos.toByteArray());
-
                 System.out.println(sha1Blob);
-                String directoryName = sha1Blob.substring(0, 2);
-                String fileName = sha1Blob.substring(2);
-
-                File root = new File(".git/objects");
-                File hashedFileDirectory = new File(root, directoryName);
-                hashedFileDirectory.mkdir();
-
-                Files.write(Path.of(hashedFileDirectory.getPath(), fileName), handler.zlibCompress(baos.toByteArray()));
-
+                handler.writeObject(sha1Blob, baos.toByteArray());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

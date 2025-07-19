@@ -9,7 +9,7 @@ import java.util.*;
 
 public class GitParser {
 
-    private Map<String,String> options = new HashMap<>();
+    private Map<String, String> options = new HashMap<>();
     private List<String> freeArgs = new ArrayList<>();
     private List<String> gitignored = new ArrayList<>();
 
@@ -18,16 +18,16 @@ public class GitParser {
             if (args[i].contains("--") || args[i].contains("-")) {
                 String key = args[i].replaceAll("^-*", "");
                 String value = "";
-                if (i+1 < args.length){
-                    value = args[i+1];
+                if (i + 1 < args.length) {
+                    value = args[i + 1];
                 }
                 options.put(key, value);
                 i++;
                 continue;
             }
-            if (args[i].contains("http://") || args[i].contains("https://")){
+            if (args[i].contains("http://") || args[i].contains("https://")) {
                 String key = "url";
-                options.put(key,args[i]);
+                options.put(key, args[i]);
                 continue;
             }
             freeArgs.add(args[i]);
@@ -36,9 +36,9 @@ public class GitParser {
         return options;
     }
 
-    private void resolveGitignore(){
+    private void resolveGitignore() {
         Path gitignore = Path.of(".gitignore");
-        if (gitignore.toFile().exists()){
+        if (gitignore.toFile().exists()) {
             try {
                 gitignored.addAll(Files.readAllLines(gitignore));
             } catch (IOException e) {
